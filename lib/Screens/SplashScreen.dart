@@ -125,7 +125,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     TextSpan(
                       text: "Treat",
                       style: TextStyle(
-                          color: Colors.purple, fontWeight: FontWeight.bold),
+                          color: Colors.purpleAccent,
+                          fontWeight: FontWeight.bold),
                     ),
                     TextSpan(
                       text: " Won't",
@@ -145,7 +146,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     TextSpan(
                       text: "Pocket",
                       style: TextStyle(
-                          color: Colors.orange, fontWeight: FontWeight.bold),
+                          color: Colors.orangeAccent,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

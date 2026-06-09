@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamerz_zone/Screens/ProductScreen.dart';
 
 import 'ProductBuyScreen.dart';
 import 'SearchScreen.dart';
@@ -26,11 +27,17 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Army Mode\nPS5 Stick',
       'price': '৳ 15,000',
       'image': 'assets/images/army_controller.jpg',
+      'description':
+          'Experience the thrill of battle with the Army Mode PS5 Stick. Designed for precision and durability, this controller features customizable buttons and enhanced grip, making it perfect for intense gaming sessions. Whether you\'re storming the battlefield or strategizing with your squad, the Army Mode PS5 Stick delivers unparalleled performance and comfort.',
+      'primaryColor': const Color(0xFF1A1A1A),
     },
     {
       'name': 'Kids Combo\nPS5 Stick',
       'price': '৳ 12,000',
       'image': 'assets/images/kids_controller.jpg',
+      'description':
+          'The Kids Combo PS5 Stick is the perfect gaming accessory for young gamers. With its vibrant colors and ergonomic design, this controller is tailored for smaller hands, ensuring a comfortable grip during play. It features responsive buttons and a durable build, making it ideal for hours of fun. Whether your child is exploring new worlds or competing with friends, the Kids Combo PS5 Stick provides an enjoyable and immersive gaming experience.',
+      'primaryColor': const Color(0xFFdf3331),
     }
   ];
   bottomNavigator(int index) {
@@ -252,57 +259,68 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProductCard(Map<String, dynamic> product) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Image.asset(
-                product['image'],
-                fit: BoxFit.contain,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductScreen(
+                    product: product,
+                  )),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Image.asset(
+                  product['image'],
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product['name'],
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
-                    height: 1.4,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product['name'],
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1A1A1A),
+                      height: 1.4,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  product['price'],
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A1A),
+                  const SizedBox(height: 4),
+                  Text(
+                    product['price'],
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF1A1A1A),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -320,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 12,
             offset: const Offset(0, -4),
           ),

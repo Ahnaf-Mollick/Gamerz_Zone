@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key});
+  final Map<String, dynamic> product;
+  const ProductScreen({super.key, required this.product});
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  int _selectedColorIndex = 0;
+  //int _selectedColorIndex = 0;
   int _quantity = 1;
-  int _selectedImageIndex = 1;
-
-  final List<Color> _colors = [
-    const Color(0xFFE8445A),
-    const Color(0xFF4FC3F7),
-    const Color(0xFF1A1A1A),
-    const Color(0xFFE0E0E0),
-  ];
-
-  // Simulate multiple product images
-  final int _totalImages = 4;
+  //int _selectedImageIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +50,6 @@ class _ProductScreenState extends State<ProductScreen> {
             child: const Icon(Icons.arrow_back_ios,
                 size: 20, color: Color(0xFF1A1A1A)),
           ),
-          const Icon(Icons.shopping_cart_outlined,
-              size: 22, color: Color(0xFF1A1A1A)),
         ],
       ),
     );
@@ -68,48 +57,16 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Widget _buildImageSection() {
     return Container(
-      height: 300,
+      width: MediaQuery.of(context).size.width,
+      height: 320,
       color: const Color(0xFFF5F5F5),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Image.asset(
-              'assets/images/featured_controller.png',
-              fit: BoxFit.contain,
-            ),
-          ),
-          Positioned(
-            bottom: 16,
-            child: _buildImageDots(),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Image.asset(
+          widget.product['image'],
+          fit: BoxFit.contain,
+        ),
       ),
-    );
-  }
-
-  Widget _buildImageDots() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(_totalImages, (index) {
-        final bool isSelected = _selectedImageIndex == index;
-        return GestureDetector(
-          onTap: () => setState(() => _selectedImageIndex = index),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            width: isSelected ? 10 : 8,
-            height: isSelected ? 10 : 8,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected
-                  ? const Color(0xFF1A1A1A)
-                  : const Color(0xFFCCCCCC),
-            ),
-          ),
-        );
-      }),
     );
   }
 
@@ -119,25 +76,28 @@ class _ProductScreenState extends State<ProductScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Super Smooth Joystick',
-            style: TextStyle(
+          Text(
+            widget.product['name']
+                .replaceAll('\n', ' ')
+                .toString()
+                .toUpperCase(),
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w800,
               color: Color(0xFF1A1A1A),
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'For your super speed performance gaming\nthis joystick will give you the best experience',
-            style: TextStyle(
+          Text(
+            widget.product['description'],
+            style: const TextStyle(
               fontSize: 13,
               color: Color(0xFF888888),
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 24),
-          _buildColorSelector(),
+          /*const SizedBox(height: 24),
+          _buildColorSelector(),*/
           const SizedBox(height: 24),
           _buildQuantitySelector(),
         ],
@@ -145,7 +105,7 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget _buildColorSelector() {
+  /*Widget _buildColorSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -190,7 +150,7 @@ class _ProductScreenState extends State<ProductScreen> {
         ),
       ],
     );
-  }
+  }*/
 
   Widget _buildQuantitySelector() {
     return Row(
@@ -210,12 +170,30 @@ class _ProductScreenState extends State<ProductScreen> {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  _buildQtyButton(
-                    icon: Icons.remove,
-                    onTap: () {
-                      if (_quantity > 1) setState(() => _quantity--);
-                    },
-                  ),
+                  _quantity > 1
+                      ? _buildQtyButton(
+                          icon: Icons.remove,
+                          onTap: () {
+                            if (_quantity > 1) setState(() => _quantity--);
+                          },
+                        )
+                      : Container(
+                          width: 34,
+                          height: 34,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 8,
+                                color: Colors.black.withValues(alpha: 0.08),
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(Icons.remove,
+                              size: 16, color: Color(0xFFCCCCCC)),
+                        ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
@@ -236,9 +214,9 @@ class _ProductScreenState extends State<ProductScreen> {
             ],
           ),
         ),
-        const Text(
-          '\$ 199',
-          style: TextStyle(
+        Text(
+          '৳ ${(int.parse(widget.product['price'].replaceAll(RegExp(r'[^\d]'), '')) * _quantity)}',
+          style: const TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w800,
             color: Color(0xFF1A1A1A),
@@ -260,8 +238,8 @@ class _ProductScreenState extends State<ProductScreen> {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
               blurRadius: 8,
+              color: Colors.black.withValues(alpha: 0.08),
               offset: const Offset(0, 2),
             ),
           ],
