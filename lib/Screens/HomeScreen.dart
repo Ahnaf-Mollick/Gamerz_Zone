@@ -14,19 +14,30 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedCategoryIndex = 0;
   int selectedNavIndex = 0;
+  int selectedCategoryIndex = 0;
   @override
   void initState() {
     super.initState();
     selectedNavIndex = widget.initialNavIndex; // ✅ set from param
   }
 
-  final List<String> _categories = ['PS5', 'GTA', 'PUBG', 'FREEFIRE'];
+  final List<String> _categories = ['All', 'PS4', 'Xbox', 'PS5'];
 
   final List<Map<String, dynamic>> _products = [
+    {
+      'name': 'God of War Themed\nDualSense Controller',
+      'price': '৳ 20,000',
+      'image': 'assets/images/featured_controller.jpg',
+      'category': 'PS5',
+      'description':
+          'Immerse yourself in the world of Kratos with the God of War Themed DualSense Controller. This limited-edition controller features a striking design inspired by the iconic God of War series, with intricate detailing and a bold color scheme. Experience enhanced gameplay with the DualSense technology, including adaptive triggers and haptic feedback, all while showcasing your love for the legendary franchise. Whether you\'re battling gods or exploring new realms, this controller is the perfect companion for your PS5 gaming adventures.',
+      'primaryColor': const Color(0xFFE8445A),
+    },
     {
       'name': 'Army Mode\nPS5 Stick',
       'price': '৳ 15,000',
       'image': 'assets/images/army_controller.jpg',
+      'category': 'PS5',
       'description':
           'Experience the thrill of battle with the Army Mode PS5 Stick. Designed for precision and durability, this controller features customizable buttons and enhanced grip, making it perfect for intense gaming sessions. Whether you\'re storming the battlefield or strategizing with your squad, the Army Mode PS5 Stick delivers unparalleled performance and comfort.',
       'primaryColor': const Color(0xFF1A1A1A),
@@ -35,9 +46,28 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Kids Combo\nPS5 Stick',
       'price': '৳ 12,000',
       'image': 'assets/images/kids_controller.jpg',
+      'category': 'PS5',
       'description':
           'The Kids Combo PS5 Stick is the perfect gaming accessory for young gamers. With its vibrant colors and ergonomic design, this controller is tailored for smaller hands, ensuring a comfortable grip during play. It features responsive buttons and a durable build, making it ideal for hours of fun. Whether your child is exploring new worlds or competing with friends, the Kids Combo PS5 Stick provides an enjoyable and immersive gaming experience.',
       'primaryColor': const Color(0xFFdf3331),
+    },
+    {
+      'name': 'Xbox Elite\nSeries 2',
+      'price': '৳ 25,000',
+      'image': 'assets/images/xbox_elite.jpg',
+      'category': 'Xbox',
+      'description':
+          'The Xbox Elite Series 2 is the ultimate gaming controller for Xbox enthusiasts. With its premium build quality and customizable features, this controller offers unparalleled performance and comfort. It includes adjustable tension thumbsticks, interchangeable paddles, and a wrap-around rubberized grip for enhanced control. Whether you\'re a competitive gamer or a casual player, the Xbox Elite Series 2 delivers a superior gaming experience on Xbox consoles.',
+      'primaryColor': const Color(0xFF1A1A1A),
+    },
+    {
+      'name': 'PS4 DualShock\nController',
+      'price': '৳ 10,000',
+      'image': 'assets/images/ps4_controller.jpg',
+      'category': 'PS4',
+      'description':
+          'The PS4 DualShock Controller is the standard controller for PlayStation 4 gaming. It features a comfortable design with responsive buttons and a built-in touchpad for enhanced gameplay. The controller also includes a built-in speaker and a headphone jack for immersive audio experiences. Whether you\'re playing action-packed games or exploring open worlds, the PS4 DualShock Controller provides a reliable and enjoyable gaming experience.',
+      'primaryColor': const Color(0xFF123086),
     }
   ];
   bottomNavigator(int index) {
@@ -216,7 +246,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: List.generate(_categories.length, (index) {
           final bool isSelected = _selectedCategoryIndex == index;
           return GestureDetector(
-            onTap: () => setState(() => _selectedCategoryIndex = index),
+            onTap: () => {
+              setState(() => _selectedCategoryIndex = index),
+            },
             child: Container(
               margin: const EdgeInsets.only(right: 12),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -241,10 +273,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProductGrid() {
+    final filteredProducts = _selectedCategoryIndex == 0
+        ? _products
+        : _products.where((product) {
+            return product['category'] == _categories[_selectedCategoryIndex];
+          }).toList();
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _products.length,
+      itemCount: filteredProducts.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 14,
@@ -252,8 +289,8 @@ class _HomeScreenState extends State<HomeScreen> {
         childAspectRatio: 0.85,
       ),
       itemBuilder: (context, index) {
-        final product = _products[index];
-        return _buildProductCard(product);
+        return _buildProductCard(filteredProducts[
+            index]); // Skip products that don't match the selected category
       },
     );
   }

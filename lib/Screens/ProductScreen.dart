@@ -267,7 +267,7 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
           ),
           child: const Text(
-            'Add to cart',
+            'Buy Now',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
