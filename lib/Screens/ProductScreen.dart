@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamerz_zone/Screens/ProductBuyScreen.dart';
 
 class ProductScreen extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -32,7 +33,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
             ),
-            _buildAddToCartBar(),
+            _buildBuyNowBar(widget.product),
           ],
         ),
       ),
@@ -249,7 +250,7 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget _buildAddToCartBar() {
+  Widget _buildBuyNowBar(Map<String, dynamic> product) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
       color: Colors.white,
@@ -257,7 +258,13 @@ class _ProductScreenState extends State<ProductScreen> {
         width: double.infinity,
         height: 52,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProductBuyScreen(
+                        product: product, quantity: _quantity)));
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFE8445A),
             foregroundColor: Colors.white,

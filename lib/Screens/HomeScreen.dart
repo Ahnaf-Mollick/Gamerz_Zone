@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamerz_zone/Screens/BuyDataScreen.dart';
 import 'package:gamerz_zone/Screens/ProductScreen.dart';
 
 import 'ProductBuyScreen.dart';
@@ -87,16 +88,19 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedNavIndex = index;
       });
     } else if (index == 2) {
-      setState(() {
-        selectedNavIndex = index;
-      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const BuyDataScreen()), // ✅ no args
+      );
+      setState(() => selectedNavIndex = index);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF4F5F5),
       body: SafeArea(
         child: Column(
           children: [
@@ -139,103 +143,115 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFeaturedBanner() {
-    return Stack(
-      children: [
-        Positioned(
-            child: Container(
-          height: 160,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(30),
-          ),
-        )),
-        Positioned(
-            left: 0,
-            top: 0,
-            child: Container(
-              height: 160,
-              width: MediaQuery.of(context).size.width * 0.7,
-              decoration: BoxDecoration(
-                color: Colors.redAccent,
-                borderRadius: BorderRadius.circular(30),
-              ),
-            )),
-        Positioned(
-          left: 20,
-          top: 20,
-          bottom: 20,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'God of War Themed\nDualSense Controller',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  height: 1.3,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductScreen(
+                    product: _products[0],
+                  )),
+        );
+      },
+      child: Stack(
+        children: [
+          Positioned(
+              child: Container(
+            height: 160,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(30),
+            ),
+          )),
+          Positioned(
+              left: 0,
+              top: 0,
+              child: Container(
+                height: 160,
+                width: MediaQuery.of(context).size.width * 0.7,
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(30),
                 ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                '৳ 20,000',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 10),
-              InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const ProductBuyScreen())); // Handle buy now action
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  decoration: BoxDecoration(
+              )),
+          Positioned(
+            left: 20,
+            top: 20,
+            bottom: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _products[0]['name'],
+                  style: const TextStyle(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    height: 1.3,
                   ),
-                  child: const Text(
-                    'Buy Now',
-                    style: TextStyle(
-                      color: Color(0xFF1A1A1A),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _products[0]['price'],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProductBuyScreen(
+                                product:
+                                    _products[0]))); // Handle buy now action
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'Buy Now',
+                      style: TextStyle(
+                        color: Color(0xFF1A1A1A),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          right: -20,
-          top: 0,
-          bottom: 0,
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
-            child: Transform.rotate(
-              angle: 0.5,
-              child: Image.asset(
-                'assets/images/featured_controller.jpg',
-                fit: BoxFit.fill,
-                width: 180,
-              ),
+              ],
             ),
           ),
-        ),
-      ],
+          Positioned(
+            right: -20,
+            top: 0,
+            bottom: 0,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              child: Transform.rotate(
+                angle: 0.5,
+                child: Image.asset(
+                  'assets/images/featured_controller.jpg',
+                  fit: BoxFit.fill,
+                  width: 180,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -372,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFF4F5F5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.06),

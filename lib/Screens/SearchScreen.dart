@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamerz_zone/Screens/HomeScreen.dart';
+import 'package:gamerz_zone/Screens/ProductScreen.dart';
 
 class SearchScreen extends StatefulWidget {
   final List<Map<String, dynamic>> products;
@@ -114,7 +115,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           childAspectRatio: 0.85,
                         ),
                         itemBuilder: (context, index) {
-                          return _buildProductCard(_filteredProducts[index]);
+                          return GestureDetector(
+                              onTap: () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProductScreen(
+                                          product: _filteredProducts[index]))),
+                              child:
+                                  _buildProductCard(_filteredProducts[index]));
                         },
                       ),
                     ),
@@ -168,7 +176,7 @@ class _SearchScreenState extends State<SearchScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
