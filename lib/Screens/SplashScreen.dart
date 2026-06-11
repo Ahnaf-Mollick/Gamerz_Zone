@@ -17,12 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.black12,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarDividerColor: Colors.white,
-    ));
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await precacheImage(
         const AssetImage('assets/splash_screen_img.jpg'),

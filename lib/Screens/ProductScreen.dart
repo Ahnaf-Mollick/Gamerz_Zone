@@ -97,61 +97,12 @@ class _ProductScreenState extends State<ProductScreen> {
               height: 1.5,
             ),
           ),
-          /*const SizedBox(height: 24),
-          _buildColorSelector(),*/
           const SizedBox(height: 24),
           _buildQuantitySelector(),
         ],
       ),
     );
   }
-
-  /*Widget _buildColorSelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Color',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1A1A1A),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: List.generate(_colors.length, (index) {
-            final bool isSelected = _selectedColorIndex == index;
-            return GestureDetector(
-              onTap: () => setState(() => _selectedColorIndex = index),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.only(right: 12),
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: _colors[index],
-                  shape: BoxShape.circle,
-                  border: isSelected
-                      ? Border.all(color: const Color(0xFF1A1A1A), width: 2.5)
-                      : Border.all(color: Colors.transparent, width: 2.5),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: _colors[index].withOpacity(0.4),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          )
-                        ]
-                      : [],
-                ),
-              ),
-            );
-          }),
-        ),
-      ],
-    );
-  }*/
 
   Widget _buildQuantitySelector() {
     return Row(

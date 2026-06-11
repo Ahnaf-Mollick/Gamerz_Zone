@@ -115,7 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                              onTap: () => Navigator.pushReplacement(
+                              onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ProductScreen(
