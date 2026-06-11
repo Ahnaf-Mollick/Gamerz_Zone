@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamerz_zone/Screens/HomeScreen.dart';
-
 import '../Manager/OrderManager.dart';
-import 'BuyDataScreen.dart';
 
 class ProductBuyScreen extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -373,12 +371,14 @@ class _ProductBuyScreenState extends State<ProductBuyScreen> {
                       },
                       product: widget.product,
                     );
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BuyDataScreen(
-                                showSuccessSnackbar: true,
-                                quantity: widget.quantity)));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const HomeScreen(initialNavIndex: 2),
+                      ),
+                      (route) => false,
+                    );
                   }
                   // Handle buy logic here
                 },

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gamerz_zone/Screens/HomeScreen.dart';
 import 'package:gamerz_zone/Screens/ProductScreen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -127,9 +126,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
             ),
-
-            // ── Back Button ─────────────────────────────────
-            _buildBackButton(context),
           ],
         ),
       ),
@@ -226,43 +222,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBackButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
-      color: Colors.white,
-      child: SizedBox(
-        width: double.infinity,
-        child: TextButton.icon(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(initialNavIndex: 0),
-              ),
-            );
-          },
-          icon: const Icon(Icons.arrow_back_ios,
-              size: 16, color: Color(0xFFE8445A)),
-          label: const Text(
-            'Back to Home',
-            style: TextStyle(
-              color: Color(0xFFE8445A),
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-            ),
-          ),
-          style: TextButton.styleFrom(
-            backgroundColor: const Color(0xFFFFECEE),
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-        ),
       ),
     );
   }

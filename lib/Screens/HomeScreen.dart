@@ -1,100 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gamerz_zone/Screens/BuyDataScreen.dart';
 import 'package:gamerz_zone/Screens/ProductScreen.dart';
-
+import '../Manager/OrderManager.dart';
 import 'ProductBuyScreen.dart';
 import 'SearchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.initialNavIndex = 0});
   final int initialNavIndex;
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedCategoryIndex = 0;
   int selectedNavIndex = 0;
-  int selectedCategoryIndex = 0;
+  final _orderManager = OrderManager();
+
   @override
   void initState() {
     super.initState();
-    selectedNavIndex = widget.initialNavIndex; // ✅ set from param
-  }
-
-  final List<String> _categories = ['All', 'PS4', 'Xbox', 'PS5'];
-
-  final List<Map<String, dynamic>> _products = [
-    {
-      'name': 'God of War Themed\nDualSense Controller',
-      'price': '৳ 20,000',
-      'image': 'assets/images/featured_controller.jpg',
-      'category': 'PS5',
-      'description':
-          'Immerse yourself in the world of Kratos with the God of War Themed DualSense Controller. This limited-edition controller features a striking design inspired by the iconic God of War series, with intricate detailing and a bold color scheme. Experience enhanced gameplay with the DualSense technology, including adaptive triggers and haptic feedback, all while showcasing your love for the legendary franchise. Whether you\'re battling gods or exploring new realms, this controller is the perfect companion for your PS5 gaming adventures.',
-      'primaryColor': const Color(0xFFE8445A),
-    },
-    {
-      'name': 'Army Mode\nPS5 Stick',
-      'price': '৳ 15,000',
-      'image': 'assets/images/army_controller.jpg',
-      'category': 'PS5',
-      'description':
-          'Experience the thrill of battle with the Army Mode PS5 Stick. Designed for precision and durability, this controller features customizable buttons and enhanced grip, making it perfect for intense gaming sessions. Whether you\'re storming the battlefield or strategizing with your squad, the Army Mode PS5 Stick delivers unparalleled performance and comfort.',
-      'primaryColor': const Color(0xFF1A1A1A),
-    },
-    {
-      'name': 'Kids Combo\nPS5 Stick',
-      'price': '৳ 12,000',
-      'image': 'assets/images/kids_controller.jpg',
-      'category': 'PS5',
-      'description':
-          'The Kids Combo PS5 Stick is the perfect gaming accessory for young gamers. With its vibrant colors and ergonomic design, this controller is tailored for smaller hands, ensuring a comfortable grip during play. It features responsive buttons and a durable build, making it ideal for hours of fun. Whether your child is exploring new worlds or competing with friends, the Kids Combo PS5 Stick provides an enjoyable and immersive gaming experience.',
-      'primaryColor': const Color(0xFFdf3331),
-    },
-    {
-      'name': 'Xbox Elite\nSeries 2',
-      'price': '৳ 25,000',
-      'image': 'assets/images/xbox_elite.jpg',
-      'category': 'Xbox',
-      'description':
-          'The Xbox Elite Series 2 is the ultimate gaming controller for Xbox enthusiasts. With its premium build quality and customizable features, this controller offers unparalleled performance and comfort. It includes adjustable tension thumbsticks, interchangeable paddles, and a wrap-around rubberized grip for enhanced control. Whether you\'re a competitive gamer or a casual player, the Xbox Elite Series 2 delivers a superior gaming experience on Xbox consoles.',
-      'primaryColor': const Color(0xFF1A1A1A),
-    },
-    {
-      'name': 'PS4 DualShock\nController',
-      'price': '৳ 10,000',
-      'image': 'assets/images/ps4_controller.jpg',
-      'category': 'PS4',
-      'description':
-          'The PS4 DualShock Controller is the standard controller for PlayStation 4 gaming. It features a comfortable design with responsive buttons and a built-in touchpad for enhanced gameplay. The controller also includes a built-in speaker and a headphone jack for immersive audio experiences. Whether you\'re playing action-packed games or exploring open worlds, the PS4 DualShock Controller provides a reliable and enjoyable gaming experience.',
-      'primaryColor': const Color(0xFF123086),
-    }
-  ];
-  bottomNavigator(int index) {
-    if (index == 0) {
-      setState(() {
-        selectedNavIndex = index;
-      });
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SearchScreen(
-                  products: _products,
-                )),
-      );
-      setState(() {
-        selectedNavIndex = index;
-      });
-    } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const BuyDataScreen()), // ✅ no args
-      );
-      setState(() => selectedNavIndex = index);
-    }
+    selectedNavIndex = widget.initialNavIndex;
   }
 
   @override
@@ -104,28 +31,109 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // ✅ IndexedStack keeps all screens alive, just hides/shows them
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
-                    _buildHeader(),
-                    const SizedBox(height: 20),
-                    _buildFeaturedBanner(),
-                    const SizedBox(height: 24),
-                    _buildCategoryTabs(),
-                    const SizedBox(height: 16),
-                    _buildProductGrid(),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+              child: IndexedStack(
+                index: selectedNavIndex,
+                children: [
+                  _HomeContent(orderManager: _orderManager), // index 0
+                  SearchScreen(products: _orderManager.products), // index 1
+                  const BuyDataScreen(), // index 2
+                ],
               ),
             ),
             _buildBottomNavBar(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavBar() {
+    final icons = [
+      Icons.home_outlined,
+      Icons.search,
+      Icons.menu_book,
+    ];
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF4F5F5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(icons.length, (index) {
+          final bool isCenter = index == 1;
+          final bool isSelected = selectedNavIndex == index;
+
+          return GestureDetector(
+            onTap: () =>
+                setState(() => selectedNavIndex = index), // ✅ just switch index
+            child: isCenter
+                ? Container(
+                    width: 48,
+                    height: 48,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFE8445A),
+                      shape: BoxShape.circle,
+                    ),
+                    child:
+                        const Icon(Icons.search, color: Colors.white, size: 22),
+                  )
+                : Icon(
+                    icons[index],
+                    size: 24,
+                    color: isSelected
+                        ? const Color(0xFF1A1A1A)
+                        : const Color(0xFFBBBBBB),
+                  ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// Extracted home content into its own widget
+// ──────────────────────────────────────────────────────────────
+class _HomeContent extends StatefulWidget {
+  final OrderManager orderManager;
+  const _HomeContent({required this.orderManager});
+
+  @override
+  State<_HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<_HomeContent> {
+  int _selectedCategoryIndex = 0;
+  final List<String> _categories = ['All', 'PS4', 'Xbox', 'PS5'];
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 24),
+          _buildHeader(),
+          const SizedBox(height: 20),
+          _buildFeaturedBanner(context),
+          const SizedBox(height: 24),
+          _buildCategoryTabs(),
+          const SizedBox(height: 16),
+          _buildProductGrid(context),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }
@@ -142,39 +150,41 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFeaturedBanner() {
+  Widget _buildFeaturedBanner(BuildContext context) {
+    final featured = widget.orderManager.products[0];
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProductScreen(
-                    product: _products[0],
-                  )),
+            builder: (context) => ProductScreen(product: featured),
+          ),
         );
       },
       child: Stack(
         children: [
           Positioned(
-              child: Container(
-            height: 160,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(30),
+            child: Container(
+              height: 160,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(30),
+              ),
             ),
-          )),
+          ),
           Positioned(
-              left: 0,
-              top: 0,
-              child: Container(
-                height: 160,
-                width: MediaQuery.of(context).size.width * 0.7,
-                decoration: BoxDecoration(
-                  color: Colors.redAccent,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              )),
+            left: 0,
+            top: 0,
+            child: Container(
+              height: 160,
+              width: MediaQuery.of(context).size.width * 0.7,
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+          ),
           Positioned(
             left: 20,
             top: 20,
@@ -184,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _products[0]['name'],
+                  featured['name'],
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -194,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _products[0]['price'],
+                  featured['price'],
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
@@ -204,12 +214,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 10),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProductBuyScreen(
-                                product:
-                                    _products[0]))); // Handle buy now action
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProductBuyScreen(product: featured),
+                      ),
+                    );
                   },
                   child: Container(
                     padding:
@@ -243,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Transform.rotate(
                 angle: 0.5,
                 child: Image.asset(
-                  'assets/images/featured_controller.jpg',
+                  featured['image'],
                   fit: BoxFit.fill,
                   width: 180,
                 ),
@@ -262,9 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: List.generate(_categories.length, (index) {
           final bool isSelected = _selectedCategoryIndex == index;
           return GestureDetector(
-            onTap: () => {
-              setState(() => _selectedCategoryIndex = index),
-            },
+            onTap: () => setState(() => _selectedCategoryIndex = index),
             child: Container(
               margin: const EdgeInsets.only(right: 12),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -288,12 +297,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildProductGrid() {
+  Widget _buildProductGrid(BuildContext context) {
+    final allProducts = widget.orderManager.products;
     final filteredProducts = _selectedCategoryIndex == 0
-        ? _products
-        : _products.where((product) {
-            return product['category'] == _categories[_selectedCategoryIndex];
+        ? allProducts
+        : allProducts.where((p) {
+            return p['category'] == _categories[_selectedCategoryIndex];
           }).toList();
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -305,21 +316,19 @@ class _HomeScreenState extends State<HomeScreen> {
         childAspectRatio: 0.85,
       ),
       itemBuilder: (context, index) {
-        return _buildProductCard(filteredProducts[
-            index]); // Skip products that don't match the selected category
+        return _buildProductCard(context, filteredProducts[index]);
       },
     );
   }
 
-  Widget _buildProductCard(Map<String, dynamic> product) {
+  Widget _buildProductCard(BuildContext context, Map<String, dynamic> product) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProductScreen(
-                    product: product,
-                  )),
+            builder: (context) => ProductScreen(product: product),
+          ),
         );
       },
       child: Container(
@@ -340,10 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Image.asset(
-                  product['image'],
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(product['image'], fit: BoxFit.contain),
               ),
             ),
             Padding(
@@ -374,57 +380,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNavBar() {
-    final icons = [
-      Icons.home_outlined,
-      Icons.search,
-      Icons.menu_book,
-    ];
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF4F5F5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(icons.length, (index) {
-          final bool isCenter = index == 1;
-          final bool isSelected = selectedNavIndex == index;
-
-          return GestureDetector(
-            onTap: () => bottomNavigator(index),
-            child: isCenter
-                ? Container(
-                    width: 48,
-                    height: 48,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFE8445A),
-                      shape: BoxShape.circle,
-                    ),
-                    child:
-                        const Icon(Icons.search, color: Colors.white, size: 22),
-                  )
-                : Icon(
-                    icons[index],
-                    size: 24,
-                    color: isSelected
-                        ? const Color(0xFF1A1A1A)
-                        : const Color(0xFFBBBBBB),
-                  ),
-          );
-        }),
       ),
     );
   }

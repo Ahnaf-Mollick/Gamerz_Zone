@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gamerz_zone/Manager/OrderManager.dart';
-import 'HomeScreen.dart';
 
 class BuyDataScreen extends StatefulWidget {
   final bool showSuccessSnackbar;
@@ -70,7 +69,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
             Expanded(
               child: order.hasOrders ? _buildOrderList() : _buildEmptyState(),
             ),
-            _buildBottomNavBar(context),
           ],
         ),
       ),
@@ -378,59 +376,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
           offset: const Offset(0, 4),
         ),
       ],
-    );
-  }
-
-  Widget _buildBottomNavBar(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const HomeScreen(initialNavIndex: 0)),
-              (route) => false,
-            ),
-            child: const Icon(Icons.home_outlined,
-                size: 24, color: Color(0xFFBBBBBB)),
-          ),
-          GestureDetector(
-            onTap: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const HomeScreen(initialNavIndex: 1)),
-              (route) => false,
-            ),
-            child: Container(
-              width: 48,
-              height: 48,
-              decoration: const BoxDecoration(
-                color: Color(0xFFE8445A),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.search, color: Colors.white, size: 22),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {},
-            child:
-                const Icon(Icons.menu_book, size: 24, color: Color(0xFF1A1A1A)),
-          ),
-        ],
-      ),
     );
   }
 }
