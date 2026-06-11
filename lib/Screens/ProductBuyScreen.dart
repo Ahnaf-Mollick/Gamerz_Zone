@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamerz_zone/Screens/HomeScreen.dart';
 
 import '../Manager/OrderManager.dart';
 import 'BuyDataScreen.dart';
@@ -36,7 +37,8 @@ class _ProductBuyScreenState extends State<ProductBuyScreen> {
         elevation: 0,
         centerTitle: true,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomeScreen())),
           child: const Icon(Icons.arrow_back_ios,
               size: 20, color: Color(0xFF1A1A1A)),
         ),
@@ -304,7 +306,10 @@ class _ProductBuyScreenState extends State<ProductBuyScreen> {
             child: SizedBox(
               height: 52,
               child: OutlinedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen())),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFE8445A), width: 1.5),
                   shape: RoundedRectangleBorder(
